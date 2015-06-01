@@ -1,4 +1,4 @@
-var co      = require("co");
+var co      = require("./index");
 var assert  = require("assert");
 
 var result = co(function * (){
@@ -8,6 +8,7 @@ var result = co(function * (){
     var test_value_1 = yield test_promise_1;
     assert.equal(test_value_1, 123,
         "Test 1: single resolved promise test failed");
+    console.log("Test 1 passed");
 
     var async_func = function(return_value) {
         return function(resolve, reject){
@@ -22,6 +23,7 @@ var result = co(function * (){
     var test_value_2 = yield test_promise_1;
     assert.equal(test_value_2, "123",
         "Test 2: single deferred promise test failed");
+    console.log("Test 2 passed");
 
     // test 3
     var test_promise_3 = [
@@ -35,7 +37,9 @@ var result = co(function * (){
     var std_value_3 = [123, "wtf!!!!", [123, 123, 123], [123], [123]];
     assert.deepEqual(test_value_3, std_value_3,
         "Test 3: promise array test failed");
+    console.log("Test 3 passed");
 
+    // test 4
     var test_promise_4 = {
         "test1": Promise.resolve(123),
         "test2": Promise.resolve([123, 123, 123]),
