@@ -5,13 +5,18 @@ var co = function(fn) {
     //TODO: type assert
     var gen = fn();
 
-    var promise = new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
 
         var next = function (gen, args) {
 
-            var msg = gen.next(args);
+            if (args instanceof Error) {
+                var msg = gen.throw(args);
+            }
+            else {
+                var msg = gen.next(args);
+            }
             var done = msg.done;
-            if (done === true) return;
+            if (done === true) resolve(this);
             var value = msg.value;
 
             // can do next
@@ -56,7 +61,6 @@ var co = function(fn) {
                     }
                     else
                         return value;
-                    console.log(value);
                     /*
                     // not promise included
                     else {
@@ -65,25 +69,29 @@ var co = function(fn) {
                     */
                 };
 
-                promise.then(function(value) {
+                promise.then(function(value){
                     try {
                         next(gen, value);
+                    }
+                    catch (error) {
+                        reject(error);
+                    };
+                }, function(error){
+                    try {
+                        if (!(error instanceof Error))
+                            error = new Error(error);
+                        next(gen, error);
                     }
                     catch (error) {
                         reject(error);
                     }
                 });
             }
-            // Done
-            else {
-                resolve(value);
-            }
         };
 
         next(gen);
-    });
 
-    return promise;
+    });
 };
 
 module.exports = co;

@@ -62,9 +62,19 @@ var result = co(function * (){
     assert.deepEqual(test_value_4, std_value_4,
         "Test 4: promise object test failed"
     );
-    console.log("Test 4 passed.");
+    console.log("Test 4 passed");
 
+    try {
+        var t = yield Promise.reject(123);
+        console.log("Test 5 failed");
+    }
+    catch (error) {
+        console.log("Test 5 passed");
+    }
 })
 .catch(function(err) {
     console.log(err);
+})
+.then(function(value){
+    console.log("All tests passed");
 });
