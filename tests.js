@@ -19,8 +19,8 @@ var result = co(function * (){
     };
 
     // test 2
-    var test_promise_2 = new Promise(async_func("123"));
-    var test_value_2 = yield test_promise_1;
+    var test_promise_2 = new Promise(async_func(new Promise(async_func("123"))));
+    var test_value_2 = yield test_promise_2;
     assert.equal(test_value_2, "123",
         "Test 2: single deferred promise test failed");
     console.log("Test 2 passed");
@@ -58,10 +58,12 @@ var result = co(function * (){
             "sub_test1": 123,
             "sub_test2": 123
         }
-    }
+    };
     assert.deepEqual(test_value_4, std_value_4,
         "Test 4: promise object test failed"
     );
+    console.log("Test 4 passed.");
+
 })
 .catch(function(err) {
     console.log(err);
